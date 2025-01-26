@@ -1,0 +1,21 @@
+<div class="events-container">
+  <h1>Upcoming Events</h1>
+  
+  <% if @events.any? %>
+    <div class="events-grid">
+      <% @events.each do |event| %>
+        <div class="event-card">
+          <h2><%= link_to event.name, event_path(event) %></h2>
+          <p>Date: <%= event.date.strftime("%B %d, %Y at %I:%M %p") %></p>
+          <p><%= truncate(event.description, length: 100) %></p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No events available.</p>
+  <% end %>
+
+  <% if user_signed_in? %>
+    <%= link_to 'Create New Event', new_event_path, class: 'btn btn-primary' %>
+  <% end %>
+</div>
