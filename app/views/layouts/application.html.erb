@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Brite" %></title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
+    <title>Eventy</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
-    <link rel="icon" href="/icon.png" type="image/png">
-    <link rel="icon" href="/icon.svg" type="image/svg+xml">
-    <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+<nav class="navbar">
+  <div class="navbar-brand">
+    <%= link_to 'Eventy', root_path, class: 'navbar-logo' %>
+  </div>
+  <div class="navbar-menu">
+    <%= link_to 'Home', root_path, class: 'navbar-item' %>
+    <%= link_to 'About', '#', class: 'navbar-item' %>
+    
+    <% if user_signed_in? %>
+      <%= link_to 'Create Event', new_event_path, class: 'navbar-item' %>
+      <%= link_to 'Profile', user_path(current_user), class: 'navbar-item' %>
+      <%= link_to 'Log Out', destroy_user_session_path, method: :delete, class: 'navbar-item logout-btn' %>
+    <% else %>
+      <%= link_to 'Sign Up', new_user_registration_path, class: 'navbar-item' %>
+      <%= link_to 'Log In', new_user_session_path, class: 'navbar-item' %>
+    <% end %>
+  </div>
+</nav>
+
+<div class="flash-messages">
+  <% flash.each do |type, msg| %>
+    <div class="alert alert-<%= type %>">
+      <%= msg %>
+    </div>
+  <% end %>
+</div>
+
+<%= yield %>
   </body>
 </html>
